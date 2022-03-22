@@ -1,4 +1,4 @@
-﻿namespace CookingAssistant.Model
+namespace CookingAssistant.Model
 {
     public class User
     {
@@ -11,6 +11,8 @@
         {
             Name = name;
             Email = email;
+            
+            Recipes = new List<Recipe>();
         }
     }
 }
