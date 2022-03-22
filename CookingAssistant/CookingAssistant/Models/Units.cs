@@ -1,4 +1,4 @@
-namespace CookingAssistant.Model
+namespace CookingAssistant.Models
 {
     public enum Units
     {
