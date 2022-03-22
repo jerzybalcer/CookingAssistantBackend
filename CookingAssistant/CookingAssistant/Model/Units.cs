@@ -1,10 +1,13 @@
-﻿namespace CookingAssistant.Model
+namespace CookingAssistant.Model
 {
     public enum Units
     {
         Kilograms,
+        Grams,
         Liters,
-        Spoons
-        //fill this
+        Teaspoons,
+        Tablespoons,
+        Cups,
+        Pinches
     }
 }
