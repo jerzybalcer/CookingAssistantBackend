@@ -8,6 +8,7 @@ namespace CookingAssistant.Models
         Teaspoons,
         Tablespoons,
         Cups,
-        Pinches
+        Pinches,
+        Pieces
     }
 }
