@@ -16,5 +16,9 @@ namespace CookingAssistant.Models
             Steps = new List<RecipeStep>();
             Ingredients = new List<RecipeIngredient>();
         }
+        private Recipe()
+        {
+
+        }
     }
 }

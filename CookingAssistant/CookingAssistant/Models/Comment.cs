@@ -13,5 +13,9 @@
             Likes = likes;
             User = user;
         }
+        private Comment()
+        {
+
+        }
     }
 }

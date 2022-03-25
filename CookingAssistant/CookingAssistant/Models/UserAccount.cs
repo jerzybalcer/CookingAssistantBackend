@@ -11,5 +11,9 @@ namespace CookingAssistant.Models
             HashedPassword = hashedPassword;
             User = user;
         }
+        private UserAccount()
+        {
+
+        }
     }
 }

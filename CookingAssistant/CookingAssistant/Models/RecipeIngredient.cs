@@ -2,7 +2,7 @@
 {
     public class RecipeIngredient
     {
-        public int IngredientId { get; set; }
+        public int RecipeIngredientId { get; set; }
         public string Name { get; set; }
         public int Ammount { get; set; }
         public Units Unit { get; set; }
@@ -12,6 +12,10 @@
             Name = name;
             Ammount = amount;
             Unit = unit;
+        }
+        private RecipeIngredient()
+        {
+
         }
     }
 }
