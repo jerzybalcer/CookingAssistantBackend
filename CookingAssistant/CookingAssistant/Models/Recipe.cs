@@ -8,13 +8,13 @@ namespace CookingAssistant.Models
         public ICollection<RecipeIngredient> Ingredients { get; set; }
         public User User { get; set; }
 
-        public Recipe(int recipeId, string name, User user)
+        public Recipe(string name, User user)
         {
             Name = name;
             User = user;
 
             Steps = new List<RecipeStep>();
             Ingredients = new List<RecipeIngredient>();
-        }      
+        }
     }
 }

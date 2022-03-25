@@ -2,13 +2,17 @@ namespace CookingAssistant.Models
 {
     public class RecipeStep
     {
+        public int RecipeStepId { get; set; }
         public string Instruction { get; set; }
         public TimeSpan Time { get; set; }
-        
-        RecipeStep(string instruction, TimeSpan time)
+        public ICollection<Comment> Comments { get; set; }
+
+        public RecipeStep(string instruction, TimeSpan time)
         {
             Instruction = instruction;
             Time = time;
+
+            Comments = new List<Comment>();
         }
     }
 }

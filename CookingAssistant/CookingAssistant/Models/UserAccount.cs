@@ -2,6 +2,7 @@ namespace CookingAssistant.Models
 {
     public class UserAccount
     {
+        public int UserAccountId { get; set; }
         public string HashedPassword { get; set; }
         public User User { get; set; }
         
