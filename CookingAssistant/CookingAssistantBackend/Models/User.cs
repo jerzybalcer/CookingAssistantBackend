@@ -15,8 +15,6 @@ namespace CookingAssistantBackend.Models
             UserAccountId = UserAccount.UserAccountId;
 
             Recipes = new List<Recipe>();
-
-            UserAccount.User = this;
         }
         private User()
         {
