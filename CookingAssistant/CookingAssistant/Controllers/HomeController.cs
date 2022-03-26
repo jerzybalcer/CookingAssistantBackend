@@ -5,6 +5,5 @@ namespace CookingAssistant.Controllers
 {
     public class HomeController: Controller
     {
-    
     }
 }
