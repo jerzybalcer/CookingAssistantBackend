@@ -139,7 +139,13 @@ namespace CookingAssistantBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -160,13 +166,7 @@ namespace CookingAssistantBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("UserAccountId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("UserAccounts");
                 });
@@ -211,15 +211,15 @@ namespace CookingAssistantBackend.Migrations
                         .HasForeignKey("RecipeId");
                 });
 
-            modelBuilder.Entity("CookingAssistantBackend.Models.UserAccount", b =>
+            modelBuilder.Entity("CookingAssistantBackend.Models.User", b =>
                 {
-                    b.HasOne("CookingAssistantBackend.Models.User", "User")
-                        .WithOne("UserAccount")
-                        .HasForeignKey("CookingAssistantBackend.Models.UserAccount", "UserId")
+                    b.HasOne("CookingAssistantBackend.Models.UserAccount", "UserAccount")
+                        .WithOne("User")
+                        .HasForeignKey("CookingAssistantBackend.Models.User", "UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.Recipe", b =>
@@ -237,8 +237,11 @@ namespace CookingAssistantBackend.Migrations
             modelBuilder.Entity("CookingAssistantBackend.Models.User", b =>
                 {
                     b.Navigation("Recipes");
+                });
 
-                    b.Navigation("UserAccount")
+            modelBuilder.Entity("CookingAssistantBackend.Models.UserAccount", b =>
+                {
+                    b.Navigation("User")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

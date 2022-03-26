@@ -6,13 +6,17 @@ namespace CookingAssistantBackend.Models
         public string Name { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
         public UserAccount UserAccount { get; set; }
+        public int UserAccountId { get; set; }
 
         public User(string name, UserAccount userAccount)
         {
             Name = name;
             UserAccount = userAccount;
+            UserAccountId = UserAccount.UserAccountId;
 
             Recipes = new List<Recipe>();
+
+            UserAccount.User = this;
         }
         private User()
         {

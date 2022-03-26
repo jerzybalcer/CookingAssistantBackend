@@ -5,21 +5,42 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CookingAssistantBackend.Migrations
 {
-    public partial class CreatedDb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "UserAccounts",
+                columns: table => new
+                {
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccounts", x => x.UserAccountId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "UserAccountId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,27 +57,6 @@ namespace CookingAssistantBackend.Migrations
                     table.PrimaryKey("PK_Recipes", x => x.RecipeId);
                     table.ForeignKey(
                         name: "FK_Recipes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserAccounts",
-                columns: table => new
-                {
-                    UserAccountId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAccounts", x => x.UserAccountId);
-                    table.ForeignKey(
-                        name: "FK_UserAccounts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -157,9 +157,9 @@ namespace CookingAssistantBackend.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAccounts_UserId",
-                table: "UserAccounts",
-                column: "UserId",
+                name: "IX_Users_UserAccountId",
+                table: "Users",
+                column: "UserAccountId",
                 unique: true);
         }
 
@@ -172,9 +172,6 @@ namespace CookingAssistantBackend.Migrations
                 name: "RecipeIngredients");
 
             migrationBuilder.DropTable(
-                name: "UserAccounts");
-
-            migrationBuilder.DropTable(
                 name: "RecipeSteps");
 
             migrationBuilder.DropTable(
@@ -182,6 +179,9 @@ namespace CookingAssistantBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "UserAccounts");
         }
     }
 }
