@@ -7,6 +7,8 @@ namespace CookingAssistantBackend.Models
         public ICollection<Recipe> Recipes { get; set; }
         public UserAccount UserAccount { get; set; }
         public int UserAccountId { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Like> Likes { get; set; }
 
         public User(string name, UserAccount userAccount)
         {
@@ -15,6 +17,8 @@ namespace CookingAssistantBackend.Models
             UserAccountId = UserAccount.UserAccountId;
 
             Recipes = new List<Recipe>();
+            Comments = new List<Comment>();
+            Likes = new List<Like>();
         }
         private User()
         {

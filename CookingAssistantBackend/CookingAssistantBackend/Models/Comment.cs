@@ -4,14 +4,15 @@
     {
         public int CommentId { get; set; }
         public string CommentText { get; set; }
-        public int Likes { get; set; }
-        public User User { get; set; }
+        public ICollection<Like> Likes { get; set; }
+        public User WrittenBy { get; set; }
 
-        public Comment(string commentText, int likes, User user)
+        public Comment(string commentText, User writtenBy)
         {
             CommentText = commentText;
-            Likes = likes;
-            User = user;
+            WrittenBy = writtenBy;
+
+            Likes = new List<Like>();
         }
         private Comment()
         {
