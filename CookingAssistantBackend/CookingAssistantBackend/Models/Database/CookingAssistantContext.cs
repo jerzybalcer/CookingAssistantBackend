@@ -11,6 +11,7 @@ namespace CookingAssistantBackend.Models.Database
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<RecipeStep> RecipeSteps { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         public CookingAssistantContext(DbContextOptions<CookingAssistantContext> options) : base(options)
         {
