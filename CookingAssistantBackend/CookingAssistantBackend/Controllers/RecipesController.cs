@@ -43,6 +43,20 @@ namespace CookingAssistantBackend.Controllers
             return recipe;
         }
 
+        // GET: api/Recipes/ogórkowa
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Recipe>> GetRecipe(string name)
+        {
+            var recipe = await _context.Recipes.Where(rec => rec.Name == name).FirstOrDefaultAsync();
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            return recipe;
+        }
+
         // PUT: api/Recipes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
