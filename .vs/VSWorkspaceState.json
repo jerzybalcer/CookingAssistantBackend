@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\CookingAssistantBackend",
+    "\\CookingAssistantBackend\\CookingAssistantBackend",
+    "\\CookingAssistantBackend\\CookingAssistantBackend\\Controllers",
+    "\\CookingAssistantBackend\\CookingAssistantBackend\\Models\\Database"
   ],
-  "SelectedNode": "\\C:\\Users\\Jerzy\\Source\\Repos\\ProjektPP",
+  "SelectedNode": "\\CookingAssistantBackend\\CookingAssistantBackend.sln",
   "PreviewInSolutionExplorer": false
 }
