@@ -9,7 +9,6 @@ namespace CookingAssistantBackend.Models
         public int UserAccountId { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Like> Likes { get; set; }
-
         public User(string name, UserAccount userAccount)
         {
             Name = name;

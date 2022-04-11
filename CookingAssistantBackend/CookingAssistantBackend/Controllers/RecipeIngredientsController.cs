@@ -44,7 +44,6 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // PUT: api/RecipeIngredients/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeIngredient(int id, RecipeIngredient recipeIngredient)
         {
@@ -75,7 +74,6 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // POST: api/RecipeIngredients
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<RecipeIngredient>> PostRecipeIngredient(RecipeIngredient recipeIngredient)
         {
