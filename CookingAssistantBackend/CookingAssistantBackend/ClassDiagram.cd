@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CookingAssistantBackend.Models.Comment">
+    <Position X="4.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAABAAAAAAAAAAAAAAAAAAAAAAiAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Comment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.Recipe">
+    <Position X="6" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\Recipe.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.RecipeIngredient">
+    <Position X="7.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAIAAAAAQAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RecipeIngredient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.RecipeStep">
+    <Position X="4.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAQAAAIQA=</HashCode>
+      <FileName>Models\RecipeStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.User">
+    <Position X="6" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAIAwIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.UserAccount">
+    <Position X="7.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACIAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserAccount.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CookingAssistantBackend.Models.Database.CookingAssistantContext">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAQAAAAAAAAAAIAAIEQAAAAAAgAAAAAAAIAA=</HashCode>
+      <FileName>Models\Database\CookingAssistantContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="CookingAssistantBackend.Models.Units">
+    <Position X="10.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAABAgAAAAAAAAACAAAAAABAAAIAQAAAI=</HashCode>
+      <FileName>Models\Units.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

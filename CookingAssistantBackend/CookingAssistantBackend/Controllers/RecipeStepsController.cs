@@ -22,15 +22,8 @@ namespace CookingAssistantBackend.Controllers
             _context = context;
         }
 
-        // GET: api/RecipeSteps
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeStep>>> GetRecipeSteps()
-        {
-            return await _context.RecipeSteps.ToListAsync();
-        }
 
-        // GET: api/RecipeSteps/5
-        [HttpGet("{id}")]
+        [HttpGet("RecipeSteps")]
         public async Task<ActionResult<RecipeStep>> GetRecipeStep(int id)
         {
             var recipeStep = await _context.RecipeSteps.FindAsync(id);

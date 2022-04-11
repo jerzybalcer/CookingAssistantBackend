@@ -24,16 +24,20 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes(int count, int offset)
         {
-            return await _context.Recipes.ToListAsync();
+            return await _context.Recipes.Skip(offset).Take(count).OrderByDescending(x => x.Name).ToListAsync();
         }
 
-        // GET: api/Recipes/5
-        [HttpGet("{id}")]
+        // GET: api/Recipes/SearchById/?id=2
+        [HttpGet("SearchById")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-            var recipe = await _context.Recipes.FindAsync(id);
+            var recipe = await _context.Recipes
+                .Where(rec => rec.RecipeId == id)
+                .Include(ing => ing.Ingredients)
+                .Include(steps => steps.Steps)
+                .FirstOrDefaultAsync();
 
             if (recipe == null)
             {
@@ -43,11 +47,11 @@ namespace CookingAssistantBackend.Controllers
             return recipe;
         }
 
-        // GET: api/Recipes/ogórkowa
-        [HttpGet("{name}")]
-        public async Task<ActionResult<Recipe>> GetRecipe(string name)
+        // GET: api/Recipes/SearchByName/?name=kanapka
+        [HttpGet("SearchByName")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(string name, int count, int offset)
         {
-            var recipe = await _context.Recipes.Where(rec => rec.Name == name).FirstOrDefaultAsync();
+            var recipe = await _context.Recipes.Skip(offset).Take(count).Where(rec => rec.Name.Contains(name)).OrderByDescending(x => x.Name).ToListAsync(); ;
 
             if (recipe == null)
             {
@@ -55,6 +59,30 @@ namespace CookingAssistantBackend.Controllers
             }
 
             return recipe;
+        }
+
+        // GET: api/Recipes/SearchByName/?name=kanapka
+        [HttpPost("SearchByTags")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(List<string> tagsList, int count, int offset)
+        {
+            var Recipes = await _context.Recipes
+                .Where(r => r.Tags.Any() && r.Tags
+                .All(tag => tagsList
+                .Any(x => tag.Name == x)))
+                .Include(t => t.Tags)
+                .Skip(offset)
+                .Take(count)
+                .OrderByDescending(x => x.Name)
+                .ToListAsync();
+
+            if (Recipes == null)
+            {
+                return NotFound();
+            }
+
+            return Recipes;
+
+            return NotFound();
         }
 
         // PUT: api/Recipes/5

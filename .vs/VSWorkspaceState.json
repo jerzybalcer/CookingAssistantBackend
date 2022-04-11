@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\CookingAssistantBackend",
+    "\\CookingAssistantBackend\\CookingAssistantBackend",
+    "\\CookingAssistantBackend\\CookingAssistantBackend\\Controllers",
+    "\\CookingAssistantBackend\\CookingAssistantBackend\\Models\\Database"
   ],
-  "SelectedNode": "\\CookingAssistantBackend.sln",
+  "SelectedNode": "\\CookingAssistantBackend\\CookingAssistantBackend.sln",
   "PreviewInSolutionExplorer": false
 }

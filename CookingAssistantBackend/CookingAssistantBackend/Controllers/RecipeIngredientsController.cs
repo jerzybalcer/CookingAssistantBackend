@@ -22,27 +22,6 @@ namespace CookingAssistantBackend.Controllers
             _context = context;
         }
 
-        // GET: api/RecipeIngredients
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeIngredient>>> GetRecipeIngredients()
-        {
-            return await _context.RecipeIngredients.ToListAsync();
-        }
-
-        // GET: api/RecipeIngredients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeIngredient>> GetRecipeIngredient(int id)
-        {
-            var recipeIngredient = await _context.RecipeIngredients.FindAsync(id);
-
-            if (recipeIngredient == null)
-            {
-                return NotFound();
-            }
-
-            return recipeIngredient;
-        }
-
         // PUT: api/RecipeIngredients/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeIngredient(int id, RecipeIngredient recipeIngredient)
