@@ -12,9 +12,10 @@ namespace CookingAssistantBackend.Models
             Email = email;
             HashedPassword = hashedPassword;
         }
-        private UserAccount()
+        public UserAccount()
         {
-
+            Email = null;
+            HashedPassword = null;
         }
     }
 }

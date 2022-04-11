@@ -21,7 +21,4 @@
   <ItemGroup>
     <None Remove="Utilis\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilis\" />
-  </ItemGroup>
 </Project>
