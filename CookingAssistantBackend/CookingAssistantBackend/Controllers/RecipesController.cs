@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
+using CookingAssistantBackend.Utilis;
 
 namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipesController : ControllerBase
+    public class RecipesController : CustomController
     {
         private readonly CookingAssistantContext _context;
 
@@ -31,12 +32,13 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes/SearchById/?id=2
         [HttpGet("SearchById")]
-        public async Task<ActionResult<Recipe>> GetRecipe(int id)
+        public async Task<IActionResult> GetRecipe(int id)
         {
             var recipe = await _context.Recipes
                 .Where(rec => rec.RecipeId == id)
                 .Include(ing => ing.Ingredients)
                 .Include(steps => steps.Steps)
+                .Include(tg=> tg.Tags)
                 .FirstOrDefaultAsync();
 
             if (recipe == null)
@@ -44,7 +46,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return recipe;
+            return Ok(recipe);
         }
 
         // GET: api/Recipes/SearchByName/?name=kanapka
