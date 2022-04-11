@@ -23,11 +23,13 @@ namespace CookingAssistantBackend.Controllers
             _context = context;
         }
 
-        // GET: api/Comments/5
-        [HttpGet("/ById/{id}")]
+        // GET: api/Comments/ById?id=1
+        [HttpGet("ById")]
         public async Task<IActionResult> GetComment(int id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _context.Comments
+                .Where(r => r.CommentId == id)
+                .FirstOrDefaultAsync();
 
             if (comment == null)
             {
@@ -37,8 +39,8 @@ namespace CookingAssistantBackend.Controllers
             return Ok(comment);
         }
 
-        // GET: api/Comments/5
-        [HttpGet("/ByStepId/{stepId}")]
+        // GET: api/Comments/ByStepId?stepId=1
+        [HttpGet("ByStepId")]
         public async Task<IActionResult> GetStepComments(int stepId)
         {
             var recipeStep = await _context.RecipeSteps
@@ -55,7 +57,7 @@ namespace CookingAssistantBackend.Controllers
 
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("/UpdateAtId/{id}")]
+        [HttpPut("UpdateAtId")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
             if (id != comment.CommentId)
@@ -86,7 +88,7 @@ namespace CookingAssistantBackend.Controllers
 
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("/AddToStep/{stepId}")]
+        [HttpPost("AddToStep")]
         public async Task<ActionResult<Comment>> PostComment(int stepId, Comment comment)
         {
             var recipeStep = await _context.RecipeSteps
@@ -101,7 +103,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // DELETE: api/Comments/5
-        [HttpDelete("/DeleteAtId/{id}")]
+        [HttpDelete("DeleteAtId")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
