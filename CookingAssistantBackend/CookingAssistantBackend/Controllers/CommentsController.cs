@@ -23,7 +23,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // GET: api/Comments/5
-        [HttpGet("{id}")]
+        [HttpGet("/ById/{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
@@ -37,7 +37,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // GET: api/Comments/5
-        [HttpGet("{stepId}")]
+        [HttpGet("/ByStepId/{stepId}")]
         public async Task<ActionResult<List<Comment>>> GetStepComments(int stepId)
         {
             var recipeStep = await _context.RecipeSteps
@@ -54,7 +54,7 @@ namespace CookingAssistantBackend.Controllers
 
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("/UpdateAtId/{id}")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
             if (id != comment.CommentId)
@@ -85,7 +85,7 @@ namespace CookingAssistantBackend.Controllers
 
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{stepId}")]
+        [HttpPost("/AddToStep/{stepId}")]
         public async Task<ActionResult<Comment>> PostComment(int stepId, Comment comment)
         {
             var recipeStep = await _context.RecipeSteps
@@ -100,7 +100,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // DELETE: api/Comments/5
-        [HttpDelete("{id}")]
+        [HttpDelete("/DeleteAtId/{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
