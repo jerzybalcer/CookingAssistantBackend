@@ -1,4 +1,5 @@
 ﻿using CookingAssistantBackend.Models.Database;
+using CookingAssistantBackend.Utilis;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,7 +8,7 @@ namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class TestController : CustomController
     {
         private readonly CookingAssistantContext _context;
 

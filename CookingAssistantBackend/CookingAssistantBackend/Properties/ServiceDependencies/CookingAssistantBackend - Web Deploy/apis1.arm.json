@@ -96,11 +96,11 @@
               "type": "Microsoft.ApiManagement/service/apis",
               "name": "CookingAssistantApi/CookingAssistantApi",
               "properties": {
-                "displayName": "CookingAssistantApi",
+                "displayName": "CookingAssistantBackend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "apiRevision": "1",
                 "description": null,
                 "subscriptionRequired": true,
-                "serviceUrl": null,
+                "serviceUrl": "https://cookingassistantbackend.azurewebsites.net",
                 "path": "",
                 "protocols": [
                   "https"

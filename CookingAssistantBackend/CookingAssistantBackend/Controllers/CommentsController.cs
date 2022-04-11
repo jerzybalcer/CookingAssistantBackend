@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
+using CookingAssistantBackend.Utilis;
 
 namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentsController : ControllerBase
+    public class CommentsController : CustomController
     {
         private readonly CookingAssistantContext _context;
 
@@ -24,7 +25,7 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Comments/5
         [HttpGet("/ById/{id}")]
-        public async Task<ActionResult<Comment>> GetComment(int id)
+        public async Task<IActionResult> GetComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
 
@@ -33,12 +34,12 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return comment;
+            return Ok(comment);
         }
 
         // GET: api/Comments/5
         [HttpGet("/ByStepId/{stepId}")]
-        public async Task<ActionResult<List<Comment>>> GetStepComments(int stepId)
+        public async Task<IActionResult> GetStepComments(int stepId)
         {
             var recipeStep = await _context.RecipeSteps
                 .Where(r => r.RecipeStepId == stepId)

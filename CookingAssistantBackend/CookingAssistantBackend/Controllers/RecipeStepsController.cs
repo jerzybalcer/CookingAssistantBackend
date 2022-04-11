@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
+using CookingAssistantBackend.Utilis;
 
 namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeStepsController : ControllerBase
+    public class RecipeStepsController : CustomController
     {
         private readonly CookingAssistantContext _context;
 
@@ -24,7 +25,7 @@ namespace CookingAssistantBackend.Controllers
 
 
         [HttpGet("RecipeSteps")]
-        public async Task<ActionResult<RecipeStep>> GetRecipeStep(int id)
+        public async Task<IActionResult> GetRecipeStep(int id)
         {
             var recipeStep = await _context.RecipeSteps.FindAsync(id);
 
@@ -33,7 +34,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return recipeStep;
+            return Ok(recipeStep);
         }
 
         // PUT: api/RecipeSteps/5

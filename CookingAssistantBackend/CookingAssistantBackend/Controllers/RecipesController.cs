@@ -25,9 +25,10 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
+        public async Task<IActionResult> GetRecipes()
         {
-            return await _context.Recipes.OrderByDescending(x => x.Name).ToListAsync();
+            var result = await _context.Recipes.OrderByDescending(x => x.Name).ToListAsync();
+            return Ok(result);
         }
 
         // GET: api/Recipes/SearchById/?id=2
@@ -51,7 +52,7 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes/SearchByName/?name=kanapka
         [HttpGet("SearchByName")]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(string name)
+        public async Task<IActionResult> GetRecipe(string name)
         {
             var recipe = await _context.Recipes
                 .Where(rec => rec.Name.Contains(name))
@@ -63,12 +64,12 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return recipe;
+            return Ok(recipe);
         }
 
         // GET: api/Recipes/SearchByName/?name=kanapka
         [HttpPost("SearchByTags")]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(List<string> tagsList)
+        public async Task<IActionResult> GetRecipe(List<string> tagsList)
         {
             var Recipes = await _context.Recipes
                 .Where(r => r.Tags.Any() && r.Tags.All(tag => tagsList.Any(x => tag.Name == x)))
@@ -81,9 +82,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return Recipes;
-
-            return NotFound();
+            return Ok(Recipes);
         }
 
         // PUT: api/Recipes/5

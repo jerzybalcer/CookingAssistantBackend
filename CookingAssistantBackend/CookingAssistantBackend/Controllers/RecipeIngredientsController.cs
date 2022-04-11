@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
+using CookingAssistantBackend.Utilis;
 
 namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeIngredientsController : ControllerBase
+    public class RecipeIngredientsController : CustomController
     {
         private readonly CookingAssistantContext _context;
 
