@@ -24,9 +24,9 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes(int count, int offset)
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-            return await _context.Recipes.Skip(offset).Take(count).OrderByDescending(x => x.Name).ToListAsync();
+            return await _context.Recipes.OrderByDescending(x => x.Name).ToListAsync();
         }
 
         // GET: api/Recipes/SearchById/?id=2
@@ -49,9 +49,12 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes/SearchByName/?name=kanapka
         [HttpGet("SearchByName")]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(string name, int count, int offset)
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(string name)
         {
-            var recipe = await _context.Recipes.Skip(offset).Take(count).Where(rec => rec.Name.Contains(name)).OrderByDescending(x => x.Name).ToListAsync(); ;
+            var recipe = await _context.Recipes
+                .Where(rec => rec.Name.Contains(name))
+                .OrderByDescending(x => x.Name)
+                .ToListAsync(); ;
 
             if (recipe == null)
             {
@@ -63,15 +66,11 @@ namespace CookingAssistantBackend.Controllers
 
         // GET: api/Recipes/SearchByName/?name=kanapka
         [HttpPost("SearchByTags")]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(List<string> tagsList, int count, int offset)
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe(List<string> tagsList)
         {
             var Recipes = await _context.Recipes
-                .Where(r => r.Tags.Any() && r.Tags
-                .All(tag => tagsList
-                .Any(x => tag.Name == x)))
+                .Where(r => r.Tags.Any() && r.Tags.All(tag => tagsList.Any(x => tag.Name == x)))
                 .Include(t => t.Tags)
-                .Skip(offset)
-                .Take(count)
                 .OrderByDescending(x => x.Name)
                 .ToListAsync();
 
