@@ -67,10 +67,28 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound("Cannot assign like to user or comment");
             }
 
-            var like = _context.Likes.Add(new Like(comment, user));
+            var fullNewLike = _context.Likes.Add(new Like(comment, user));
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { likeId = like.Entity.LikeId }, like.Entity);   
+            newLike.LikeId = fullNewLike.Entity.LikeId;
+
+            return CreatedAtAction(nameof(GetById), new { likeId = fullNewLike.Entity.LikeId }, newLike);   
+        }
+
+        [HttpDelete("DeleteAtId/{likeId}")]
+        public async Task<IActionResult> Delete(int likeId)
+        {
+            var like = await _context.Likes.FirstOrDefaultAsync(c => c.LikeId == likeId);
+
+            if(like == null)
+            {
+                return NotFound("Like not found");
+            }
+
+            _context.Likes.Remove(like);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
