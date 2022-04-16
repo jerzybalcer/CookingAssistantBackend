@@ -1,6 +1,7 @@
 ﻿using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Models.DTOs;
+using CookingAssistantBackend.Utilis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace CookingAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LikesController : ControllerBase
+    public class LikesController : CustomController
     {
         private readonly CookingAssistantContext _context;
 
@@ -19,12 +20,12 @@ namespace CookingAssistantBackend.Controllers
         }
 
         [HttpGet("GetById/{likeId}", Name = nameof(GetById))]
-        public async Task<ActionResult<LikeDto>> GetById(int likeId)
+        public async Task<IActionResult> GetById(int likeId)
         {
             var like = await _context.Likes
                 .Where(l => l.LikeId == likeId)
                 .Include(l => l.Comment).Include(l => l.LikedBy)
-                .Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId))
+                .Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId, l.LikedBy.Name))
                 .FirstOrDefaultAsync();
 
             if(like == null)
@@ -36,7 +37,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         [HttpGet("GetByCommment/{commentId}", Name = "GetByComment")]
-        public async Task<ActionResult<List<LikeDto>>> GetCommentLikes(int commentId)
+        public async Task<IActionResult> GetCommentLikes(int commentId)
         {
             var comment = await _context.Comments.Include(c => c.Likes).ThenInclude(l => l.LikedBy).FirstOrDefaultAsync(c => c.CommentId == commentId);
 
@@ -45,7 +46,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound("Comment not found");
             }
 
-            var likes = comment.Likes.Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId)).ToList();
+            var likes = comment.Likes.Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId, l.LikedBy.Name)).ToList();
 
             return Ok(likes);
         }

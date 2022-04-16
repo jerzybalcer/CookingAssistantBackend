@@ -37,7 +37,8 @@ namespace CookingAssistantBackend.Controllers
                     CommentId = c.CommentId,
                     CommentText = c.CommentText,
                     WrittenById = c.WrittenBy.UserId,
-                    LikesCount = c.Likes.Count
+                    LikesCount = c.Likes.Count,
+                    WrittenByName = c.WrittenBy.Name
                 })
                 .FirstOrDefaultAsync();
 
@@ -69,38 +70,45 @@ namespace CookingAssistantBackend.Controllers
                 CommentId = c.CommentId,
                 CommentText = c.CommentText,
                 WrittenById = c.WrittenBy.UserId,
-                LikesCount = c.Likes.Count
+                LikesCount = c.Likes.Count,
+                WrittenByName = c.WrittenBy.Name
             }
             ).ToList();
 
             return Ok(comments);
         }
 
-        [HttpPost("AddToStep/{stepId}")]
-        public async Task<ActionResult<Comment>> PostComment(int stepId, CommentDto newComment)
+        [HttpPost("AddToStep/{stepId}/{userId}/{commentText}")]
+        public async Task<IActionResult> PostComment(int stepId, int userId, string commentText)
         {
             var recipeStep = await _context.RecipeSteps
                 .Include(rs => rs.Comments)
                 .Where(r => r.RecipeStepId == stepId)
                 .FirstOrDefaultAsync();
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == newComment.WrittenById);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
 
             if(user == null)
             {
                 return NotFound("Could find the author of the comment");
             }
 
-            var fullComment = new Comment(newComment.CommentText, user);
+            var fullComment = new Comment(commentText, user);
 
             recipeStep.Comments.Add(fullComment);
 
             await _context.SaveChangesAsync();
 
-            newComment.CommentId = fullComment.CommentId;
-            newComment.LikesCount = 0;
+            var newCommentDto = new CommentDto
+            {
+                CommentId = fullComment.CommentId,
+                CommentText = fullComment.CommentText,
+                WrittenById = fullComment.WrittenBy.UserId,
+                WrittenByName = fullComment.WrittenBy.Name,
+                LikesCount = 0
+            };
 
-            return CreatedAtAction("GetComment", new { id = fullComment.CommentId }, newComment);
+            return CreatedAtAction("GetComment", new { id = fullComment.CommentId }, newCommentDto);
         }
 
         [HttpDelete("DeleteAtId")]
