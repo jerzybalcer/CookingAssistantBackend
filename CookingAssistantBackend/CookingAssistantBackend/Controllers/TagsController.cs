@@ -95,5 +95,28 @@ namespace CookingAssistantBackend.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("DeleteFromRecipe/{recipeId}/{tagId}")]
+        public async Task<IActionResult> DeleteFromRecipe(int recipeId, int tagId)
+        {
+            var recipe = await _context.Recipes.Include(r => r.Tags).FirstOrDefaultAsync(r => r.RecipeId == recipeId);
+
+            if (recipe == null)
+            {
+                return NotFound("Recipe not found");
+            }
+
+            var tag = recipe.Tags.FirstOrDefault(r => r.TagId == tagId);
+
+            if(tag == null)
+            {
+                return NotFound("Tag not found on this recipe");
+            }
+
+            recipe.Tags.Remove(tag);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
