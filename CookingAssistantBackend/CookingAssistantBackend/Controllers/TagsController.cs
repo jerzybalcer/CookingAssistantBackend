@@ -59,9 +59,20 @@ namespace CookingAssistantBackend.Controllers
             }
 
             var tag = _mapper.Map<Tag>(tagDto);
-            tag.Recipes = new List<Recipe> { recipe };
 
-            _context.Tags.Add(tag);
+            var existingTag = await _context.Tags.Include(t => t.Recipes).Where(t => t.Name == tag.Name).FirstOrDefaultAsync();
+
+            if (existingTag == null)
+            {
+                tag.Recipes = new List<Recipe> { recipe };
+                _context.Tags.Add(tag);
+            }
+            else
+            {
+                existingTag.Recipes.Add(recipe);
+                tag = existingTag;
+            }
+
             recipe.Tags.Add(tag);
 
             await _context.SaveChangesAsync();

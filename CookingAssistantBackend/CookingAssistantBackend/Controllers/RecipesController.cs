@@ -89,8 +89,8 @@ namespace CookingAssistantBackend.Controllers
                 .Include(r => r.Ingredients)
                 .Include(r => r.Tags)
                 .Include(r => r.User)
-                .Where(r => r.Tags.Any() && r.Tags.All(tag => tagsList.Any(x => tag.Name == x)))
-                .OrderByDescending(x => x.Name)
+                .Where(r => r.Tags.Any() && r.Tags.All(tag => tagsList.Any(searchPhrase => tag.Name == searchPhrase)))
+                .OrderByDescending(r => r.Name)
                 .ToListAsync();
 
             if (recipes == null)
