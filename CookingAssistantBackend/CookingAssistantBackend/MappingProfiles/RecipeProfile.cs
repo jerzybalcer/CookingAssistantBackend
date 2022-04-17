@@ -10,9 +10,9 @@ namespace CookingAssistantBackend.MappingProfiles
         {
             CreateMap<Recipe, RecipeDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.UserId))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name))
                 .ReverseMap()
-                .ForMember(s => s.RecipeId, opt => opt.Ignore());
+                .ForPath(s => s.User.UserId, opt => opt.MapFrom(src => src.UserId));
+
 
             CreateMap<RecipeStep, RecipeStepDto>().ReverseMap();
 
@@ -20,11 +20,16 @@ namespace CookingAssistantBackend.MappingProfiles
 
             CreateMap<Comment, CommentDto>()
                 .ForMember(dest => dest.WrittenById, opt => opt.MapFrom(src => src.WrittenBy.UserId))
-                .ForMember(dest => dest.WrittenByName, opt => opt.MapFrom(src => src.WrittenBy.Name))
-                .ReverseMap();
+                .ReverseMap()
+                .ForPath(s => s.WrittenBy.UserId, opt => opt.MapFrom(src => src.WrittenById));
 
             CreateMap<Like, LikeDto>()
-                .ReverseMap();
+                .ForMember(dest => dest.CommentId, opt => opt.MapFrom(src => src.Comment.CommentId))
+                .ForMember(dest => dest.LikedById, opt => opt.MapFrom(src => src.LikedBy.UserId))
+                .ReverseMap()
+                .ForPath(s => s.Comment.CommentId, opt => opt.MapFrom(src => src.CommentId))
+                .ForPath(s => s.LikedBy.UserId, opt => opt.MapFrom(src => src.LikedById));
+
         }
     }
 }

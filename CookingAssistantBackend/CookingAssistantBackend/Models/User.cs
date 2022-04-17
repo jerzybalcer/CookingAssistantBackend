@@ -19,7 +19,7 @@ namespace CookingAssistantBackend.Models
             Comments = new List<Comment>();
             Likes = new List<Like>();
         }
-        private User()
+        public User()
         {
 
         }

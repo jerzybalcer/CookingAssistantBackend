@@ -9,7 +9,10 @@
             LikedById = likedById;
             LikedByName = likedByName;
         }
+        public LikeDto()
+        {
 
+        }
         public int LikeId { get; set; }
         public int CommentId { get; set; }
         public int LikedById { get; set; }

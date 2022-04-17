@@ -1,4 +1,5 @@
-﻿using CookingAssistantBackend.Models;
+﻿using AutoMapper;
+using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Models.DTOs;
 using CookingAssistantBackend.Utilis;
@@ -13,10 +14,12 @@ namespace CookingAssistantBackend.Controllers
     public class LikesController : CustomController
     {
         private readonly CookingAssistantContext _context;
+        private readonly IMapper _mapper;
 
-        public LikesController(CookingAssistantContext context)
+        public LikesController(CookingAssistantContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("GetById/{likeId}", Name = nameof(GetById))]
@@ -25,7 +28,6 @@ namespace CookingAssistantBackend.Controllers
             var like = await _context.Likes
                 .Where(l => l.LikeId == likeId)
                 .Include(l => l.Comment).Include(l => l.LikedBy)
-                .Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId, l.LikedBy.Name))
                 .FirstOrDefaultAsync();
 
             if(like == null)
@@ -33,7 +35,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound("Like not found");
             }
 
-            return Ok(like);
+            return Ok(_mapper.Map<LikeDto>(like));
         }
 
         [HttpGet("GetByCommment/{commentId}", Name = "GetByComment")]
@@ -46,34 +48,31 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound("Comment not found");
             }
 
-            var likes = comment.Likes.Select(l => new LikeDto(l.LikeId, l.Comment.CommentId, l.LikedBy.UserId, l.LikedBy.Name)).ToList();
-
-            return Ok(likes);
+            return Ok(_mapper.Map<List<LikeDto>>(comment.Likes.ToList()));
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> AddLike(LikeDto newLike)
+        public async Task<IActionResult> AddLike(LikeDto newLikeDto)
         {
-            if(newLike == null)
+            if(newLikeDto == null)
             {
                 return BadRequest("Invalid like object");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == newLike.LikedById);
+            var like = _mapper.Map<Like>(newLikeDto);
 
-            var comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == newLike.CommentId);
+            var user = _context.Attach(like.LikedBy);
+            var comment = _context.Attach(like.Comment);
 
-            if(user == null || comment == null)
+            if(user.State != EntityState.Unchanged || comment.State != EntityState.Unchanged)
             {
-                return NotFound("Cannot assign like to user or comment");
+                return BadRequest("Cannot assign like to any user or comment");
             }
 
-            var fullNewLike = _context.Likes.Add(new Like(comment, user));
+            _context.Likes.Add(like);
             await _context.SaveChangesAsync();
 
-            newLike.LikeId = fullNewLike.Entity.LikeId;
-
-            return CreatedAtAction(nameof(GetById), new { likeId = fullNewLike.Entity.LikeId }, newLike);   
+            return CreatedAtAction(nameof(GetById), new { likeId = like.LikeId }, _mapper.Map<LikeDto>(like));   
         }
 
         [HttpDelete("DeleteAtId/{likeId}")]
