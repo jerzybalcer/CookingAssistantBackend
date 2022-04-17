@@ -10,6 +10,7 @@ using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Utilis;
 using CookingAssistantBackend.Models.DTOs;
+using AutoMapper;
 
 namespace CookingAssistantBackend.Controllers
 {
@@ -18,10 +19,12 @@ namespace CookingAssistantBackend.Controllers
     public class CommentsController : CustomController
     {
         private readonly CookingAssistantContext _context;
+        private readonly IMapper _mapper;
 
-        public CommentsController(CookingAssistantContext context)
+        public CommentsController(CookingAssistantContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [ProducesResponseType(typeof(CommentDto), 200)]
@@ -32,14 +35,6 @@ namespace CookingAssistantBackend.Controllers
                 .Include(c => c.Likes)
                 .Include(c => c.WrittenBy)
                 .Where(c => c.CommentId == id)
-                .Select(c => new CommentDto
-                {
-                    CommentId = c.CommentId,
-                    CommentText = c.CommentText,
-                    WrittenById = c.WrittenBy.UserId,
-                    LikesCount = c.Likes.Count,
-                    WrittenByName = c.WrittenBy.Name
-                })
                 .FirstOrDefaultAsync();
 
             if (comment == null)
@@ -47,7 +42,7 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(comment);
+            return Ok(_mapper.Map<CommentDto>(comment));
         }
 
         [ProducesResponseType(typeof(List<CommentDto>), 200)]
@@ -65,20 +60,12 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound("Step not found");
             }
 
-            var comments = step.Comments.Select(c => new CommentDto
-            {
-                CommentId = c.CommentId,
-                CommentText = c.CommentText,
-                WrittenById = c.WrittenBy.UserId,
-                LikesCount = c.Likes.Count,
-                WrittenByName = c.WrittenBy.Name
-            }
-            ).ToList();
+            var comments = step.Comments.ToList();
 
-            return Ok(comments);
+            return Ok(_mapper.Map<List<CommentDto>>(comments));
         }
 
-        [HttpPost("AddToStep/{stepId}/{userId}/{commentText}")]
+        [HttpPost("AddToStep")]
         public async Task<IActionResult> PostComment(int stepId, int userId, string commentText)
         {
             var recipeStep = await _context.RecipeSteps
@@ -99,16 +86,7 @@ namespace CookingAssistantBackend.Controllers
 
             await _context.SaveChangesAsync();
 
-            var newCommentDto = new CommentDto
-            {
-                CommentId = fullComment.CommentId,
-                CommentText = fullComment.CommentText,
-                WrittenById = fullComment.WrittenBy.UserId,
-                WrittenByName = fullComment.WrittenBy.Name,
-                LikesCount = 0
-            };
-
-            return CreatedAtAction("GetComment", new { id = fullComment.CommentId }, newCommentDto);
+            return CreatedAtAction("GetComment", new { id = fullComment.CommentId }, _mapper.Map<CommentDto>(fullComment));
         }
 
         [HttpDelete("DeleteAtId")]
