@@ -89,7 +89,7 @@ namespace CookingAssistantBackend.Controllers
                 .Include(r => r.Ingredients)
                 .Include(r => r.Tags)
                 .Include(r => r.User)
-                .Where(r => r.Tags.Any() && r.Tags.All(tag => tagsList.Any(searchPhrase => tag.Name == searchPhrase)))
+                .Where(r => r.Tags.Any())
                 .OrderByDescending(r => r.Name)
                 .ToListAsync();
 
@@ -98,7 +98,17 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<List<RecipeDto>>(recipes));
+            var matchingRecipes = new List<Recipe>();
+
+            foreach(var recipe in recipes)
+            {
+                if (tagsList.All(searchPhrase => recipe.Tags.Any(t => t.Name == searchPhrase)))
+                {
+                    matchingRecipes.Add(recipe);
+                }
+            }
+
+            return Ok(_mapper.Map<List<RecipeDto>>(matchingRecipes));
         }
 
         // PUT: api/Recipes/5
