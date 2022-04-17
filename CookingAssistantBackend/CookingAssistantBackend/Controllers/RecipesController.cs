@@ -102,27 +102,35 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // PUT: api/Recipes/5
-        [HttpPut("{id}")]
+        [HttpPut("UpdateAtId/{id}")]
         public async Task<IActionResult> PutRecipe(int id, RecipeDto recipeDto)
         {
             if (id != recipeDto.RecipeId)
             {
-                return BadRequest();
-            }
-
-            var oldRecipe = await _context.Recipes.AsTracking().FirstOrDefaultAsync(r => r.RecipeId == id);
-
-            if(oldRecipe == null)
-            {
-                return NotFound("Recipe not found");
+                return BadRequest("Ids don't match");
             }
 
             var newRecipe = _mapper.Map<Recipe>(recipeDto);
+
+            var oldRecipe = await _context.Recipes
+                .Include(r => r.Ingredients)
+                .Include(r => r.Steps)
+                .Include(r => r.Tags)
+                .Include(r => r.User)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.RecipeId == id);
+
+            if (oldRecipe == null)
+            {
+                return NotFound("Recipe not found");
+            }
 
             oldRecipe.Name = newRecipe.Name;
             oldRecipe.Steps = newRecipe.Steps;
             oldRecipe.Ingredients = newRecipe.Ingredients;
             oldRecipe.Tags = newRecipe.Tags;
+
+            _context.Entry(oldRecipe).State = EntityState.Modified;
 
             try
             {
@@ -144,12 +152,27 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // POST: api/Recipes
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<ActionResult<Recipe>> PostRecipe(RecipeDto recipeDto)
         {
             var recipe = _mapper.Map<Recipe>(recipeDto);
             
-            _context.Attach(recipe);
+            var user = _context.Attach(recipe.User);
+
+            if(user.State != EntityState.Unchanged)
+            {
+                return BadRequest("Cannot find user");
+            }
+
+            foreach(var step in recipe.Steps)
+            {
+                step.Comments = new List<Comment>();
+            }
+
+            foreach(var tag in recipe.Tags)
+            {
+                _context.Attach(tag);
+            }
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
@@ -158,7 +181,7 @@ namespace CookingAssistantBackend.Controllers
         }
 
         // DELETE: api/Recipes/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAtId/{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
             var recipe = await _context.Recipes.FindAsync(id);
