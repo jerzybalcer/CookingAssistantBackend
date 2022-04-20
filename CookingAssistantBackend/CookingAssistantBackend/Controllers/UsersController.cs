@@ -38,6 +38,7 @@ namespace CookingAssistantBackend.Controllers
             UserAccount user = new UserAccount(request.Username, request.Password);
 
             _context.UserAccounts.Add(user);
+            await _context.SaveChangesAsync();
             return Ok(user);
         }
 
