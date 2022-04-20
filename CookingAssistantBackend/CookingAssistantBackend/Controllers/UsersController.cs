@@ -1,8 +1,12 @@
-﻿using CookingAssistantBackend.Models;
+﻿using Backend.Services;
+using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Utilis;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace CookingAssistantBackend.Controllers
@@ -12,15 +16,18 @@ namespace CookingAssistantBackend.Controllers
     public class UsersController : CustomController
     {
         private readonly CookingAssistantContext _context;
+        private readonly ITokenService _tokenService;
 
-        public UsersController(CookingAssistantContext context)
+        public UsersController(CookingAssistantContext context, ITokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         public static UserAccount account = new UserAccount();
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(AuthenticateRequest request)
         {
             //CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -35,16 +42,26 @@ namespace CookingAssistantBackend.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(AuthenticateRequest request)
         {
-            bool exist = _context.UserAccounts
-                .Any(r => r.Email == request.Username.ToLower() && r.HashedPassword == request.Password);
+            var user = await _context.UserAccounts.Include(u => u.User)
+                .Where(r => r.Email == request.Username.ToLower() && r.HashedPassword == request.Password)
+                .FirstOrDefaultAsync();
 
-            if (!exist)
+            if (user == null)
                 return BadRequest("no user found");
 
-            return Ok("cos dziala");
+
+            var token = _tokenService.GenerateToken(user);
+
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+            user.RefreshTokenExpiries = DateTime.Now.AddHours(2);
+
+            await _context.SaveChangesAsync();
+            return Ok(new Tuple<string, string>(token, user.RefreshToken));
         }
+
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
