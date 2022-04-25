@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using CookingAssistantBackend.Models;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Utilis;
+using CookingAssistantBackend.Models.DTOs;
+using AutoMapper;
 
 namespace CookingAssistantBackend.Controllers
 {
@@ -17,18 +19,22 @@ namespace CookingAssistantBackend.Controllers
     public class CommentsController : CustomController
     {
         private readonly CookingAssistantContext _context;
+        private readonly IMapper _mapper;
 
-        public CommentsController(CookingAssistantContext context)
+        public CommentsController(CookingAssistantContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        // GET: api/Comments/ById?id=1
-        [HttpGet("ById")]
+        [ProducesResponseType(typeof(CommentDto), 200)]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetComment(int id)
         {
             var comment = await _context.Comments
-                .Where(r => r.CommentId == id)
+                .Include(c => c.Likes)
+                .Include(c => c.WrittenBy)
+                .Where(c => c.CommentId == id)
                 .FirstOrDefaultAsync();
 
             if (comment == null)
@@ -36,73 +42,53 @@ namespace CookingAssistantBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(comment);
+            return Ok(_mapper.Map<CommentDto>(comment));
         }
 
-        // GET: api/Comments/ByStepId?stepId=1
-        [HttpGet("ByStepId")]
+        [ProducesResponseType(typeof(List<CommentDto>), 200)]
+        [HttpGet("GetByStep/{stepId}")]
         public async Task<IActionResult> GetStepComments(int stepId)
         {
-            var recipeStep = await _context.RecipeSteps
-                .Where(r => r.RecipeStepId == stepId)
-                .FirstOrDefaultAsync();
+            var step = await _context.RecipeSteps
+                .Include(rs => rs.Comments)
+                .ThenInclude(c => c.WrittenBy)
+                .ThenInclude(c => c.Likes)
+                .FirstOrDefaultAsync(rs => rs.RecipeStepId == stepId);
 
-            if (recipeStep == null)
+            if (step == null)
             {
-                return NotFound();
+                return NotFound("Step not found");
             }
 
-            return Ok(recipeStep.Comments.ToList());
+            var comments = step.Comments.ToList();
+
+            return Ok(_mapper.Map<List<CommentDto>>(comments));
         }
 
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateAtId")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
-        {
-            if (id != comment.CommentId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(comment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Comments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddToStep")]
-        public async Task<ActionResult<Comment>> PostComment(int stepId, Comment comment)
+        public async Task<IActionResult> PostComment(int stepId, int userId, string commentText)
         {
             var recipeStep = await _context.RecipeSteps
+                .Include(rs => rs.Comments)
                 .Where(r => r.RecipeStepId == stepId)
                 .FirstOrDefaultAsync();
 
-            recipeStep.Comments.Add(comment);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if(user == null)
+            {
+                return NotFound("Could find the author of the comment");
+            }
+
+            var fullComment = new Comment(commentText, user);
+
+            recipeStep.Comments.Add(fullComment);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetComment", new { id = comment.CommentId }, comment);
+            return CreatedAtAction("GetComment", new { id = fullComment.CommentId }, _mapper.Map<CommentDto>(fullComment));
         }
 
-        // DELETE: api/Comments/5
         [HttpDelete("DeleteAtId")]
         public async Task<IActionResult> DeleteComment(int id)
         {
@@ -116,11 +102,6 @@ namespace CookingAssistantBackend.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool CommentExists(int id)
-        {
-            return _context.Comments.Any(e => e.CommentId == id);
         }
     }
 }

@@ -4,6 +4,7 @@ using CookingAssistantBackend.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingAssistantBackend.Migrations
 {
     [DbContext(typeof(CookingAssistantContext))]
-    partial class CookingAssistantContextModelSnapshot : ModelSnapshot
+    [Migration("20220417194359_OnDeleteRecipe")]
+    partial class OnDeleteRecipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,13 +204,6 @@ namespace CookingAssistantBackend.Migrations
                     b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiries")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("UserAccountId");
 

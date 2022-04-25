@@ -1,4 +1,5 @@
 using Backend.Services;
+using CookingAssistantBackend.MappingProfiles;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Utilis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CookingAssistantContext>(
     options => options.UseSqlServer("Server=tcp:tab-projekt.database.windows.net,1433;Initial Catalog=cooking-assistant;Persist Security Info=False;User ID=tab;Password=Projekt1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //builder.Services.AddCors(options =>
 //{
