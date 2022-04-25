@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
@@ -22,8 +23,5 @@
 
   <ItemGroup>
     <None Remove="Utilis\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilis\" />
   </ItemGroup>
 </Project>

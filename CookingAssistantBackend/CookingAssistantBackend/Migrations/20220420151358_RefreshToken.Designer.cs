@@ -4,6 +4,7 @@ using CookingAssistantBackend.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingAssistantBackend.Migrations
 {
     [DbContext(typeof(CookingAssistantContext))]
-    partial class CookingAssistantContextModelSnapshot : ModelSnapshot
+    [Migration("20220420151358_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace CookingAssistantBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecipeStepId")
+                    b.Property<int?>("RecipeStepId")
                         .HasColumnType("int");
 
                     b.Property<int>("WrittenByUserId")
@@ -134,7 +136,7 @@ namespace CookingAssistantBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecipeId")
+                    b.Property<int?>("RecipeId")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan?>("Time")
@@ -234,9 +236,7 @@ namespace CookingAssistantBackend.Migrations
                 {
                     b.HasOne("CookingAssistantBackend.Models.RecipeStep", null)
                         .WithMany("Comments")
-                        .HasForeignKey("RecipeStepId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeStepId");
 
                     b.HasOne("CookingAssistantBackend.Models.User", "WrittenBy")
                         .WithMany("Comments")
@@ -288,9 +288,7 @@ namespace CookingAssistantBackend.Migrations
                 {
                     b.HasOne("CookingAssistantBackend.Models.Recipe", null)
                         .WithMany("Steps")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeId");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.User", b =>
