@@ -1,4 +1,4 @@
-using Backend.Services;
+﻿using Backend.Services;
 using CookingAssistantBackend.MappingProfiles;
 using CookingAssistantBackend.Models.Database;
 using CookingAssistantBackend.Utilis;
@@ -40,6 +40,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins("https://rookiedoo.herokuapp.com")
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
         });
