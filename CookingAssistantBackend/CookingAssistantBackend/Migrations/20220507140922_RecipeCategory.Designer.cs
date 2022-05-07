@@ -4,6 +4,7 @@ using CookingAssistantBackend.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingAssistantBackend.Migrations
 {
     [DbContext(typeof(CookingAssistantContext))]
-    partial class CookingAssistantContextModelSnapshot : ModelSnapshot
+    [Migration("20220507140922_RecipeCategory")]
+    partial class RecipeCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("WrittenByUserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.Like", b =>
@@ -69,7 +71,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("LikedByUserId");
 
-                    b.ToTable("Likes", (string)null);
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.Recipe", b =>
@@ -94,7 +96,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.RecipeIngredient", b =>
@@ -122,7 +124,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeIngredients", (string)null);
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.RecipeStep", b =>
@@ -147,7 +149,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeSteps", (string)null);
+                    b.ToTable("RecipeSteps");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.Tag", b =>
@@ -164,7 +166,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasKey("TagId");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.User", b =>
@@ -187,7 +189,7 @@ namespace CookingAssistantBackend.Migrations
                     b.HasIndex("UserAccountId")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.UserAccount", b =>
@@ -215,7 +217,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasKey("UserAccountId");
 
-                    b.ToTable("UserAccounts", (string)null);
+                    b.ToTable("UserAccounts");
                 });
 
             modelBuilder.Entity("RecipeTag", b =>
@@ -230,7 +232,7 @@ namespace CookingAssistantBackend.Migrations
 
                     b.HasIndex("TagsTagId");
 
-                    b.ToTable("RecipeTag", (string)null);
+                    b.ToTable("RecipeTag");
                 });
 
             modelBuilder.Entity("CookingAssistantBackend.Models.Comment", b =>

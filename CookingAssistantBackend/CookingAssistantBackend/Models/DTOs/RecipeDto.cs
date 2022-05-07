@@ -7,6 +7,7 @@
         public ICollection<RecipeStepDto> Steps { get; set; }
         public ICollection<RecipeIngredient> Ingredients { get; set; }
         public ICollection<TagDto> Tags { get; set; }
+        public RecipeCategory Category { get; set; }
         public int UserId { get; set; }
         public string UserName { get; set; }
 

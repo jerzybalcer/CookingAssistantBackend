@@ -139,6 +139,7 @@ namespace CookingAssistantBackend.Controllers
             oldRecipe.Steps = newRecipe.Steps;
             oldRecipe.Ingredients = newRecipe.Ingredients;
             oldRecipe.Tags = newRecipe.Tags;
+            oldRecipe.Category = newRecipe.Category;
 
             _context.Entry(oldRecipe).State = EntityState.Modified;
 
