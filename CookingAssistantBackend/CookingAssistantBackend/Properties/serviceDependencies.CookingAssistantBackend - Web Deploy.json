@@ -4,6 +4,12 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/CookingAssistantApi/apis/CookingAssistantApi",
       "type": "apis.azure"
     },
+    "appConfig1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.AppConfiguration/configurationStores/cookingassistantconfiguration",
+      "type": "appConfig.azure",
+      "connectionId": "AppConfig"
+    },
     "mssql1": {
       "secretStore": "AzureAppSettings",
       "type": "mssql.onprem",

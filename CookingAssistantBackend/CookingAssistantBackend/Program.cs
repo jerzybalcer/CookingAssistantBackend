@@ -5,9 +5,17 @@ using CookingAssistantBackend.Utilis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.Text;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//// get azure app configuration connection string from local secrets manager
+var configurationConnectionString = builder.Configuration.GetConnectionString("AppConfig");
+
+// add app configuration from azure (prevent from storing secrets in project)
+builder.Configuration.AddAzureAppConfiguration(configurationConnectionString);
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
@@ -19,7 +27,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CookingAssistantContext>(
-    options => options.UseSqlServer("Server=tcp:tab-projekt.database.windows.net,1433;Initial Catalog=cooking-assistant;Persist Security Info=False;User ID=tab;Password=Projekt1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+    options => options.UseSqlServer(builder.Configuration["Database:ConnectionString"]));
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
