@@ -28,8 +28,8 @@ namespace CookingAssistantBackend.Utilis
 
                 var claims = new List<Claim> 
                 {
-                    new Claim("test", userAccount.Email),
-                    new Claim("test2", userAccount.UserAccountId.ToString())
+                    new Claim("email", userAccount.Email),
+                    new Claim("id", userAccount.UserAccountId.ToString())
                 };
 
                 var tokenDescriptor = new SecurityTokenDescriptor
