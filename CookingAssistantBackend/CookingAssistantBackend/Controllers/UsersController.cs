@@ -63,6 +63,29 @@ namespace CookingAssistantBackend.Controllers
             return Ok(new Tuple<string, string>(token, user.RefreshToken));
         }
 
+        [HttpPost("UpdateWorker")]
+        public async Task<IActionResult> UpdateWorker(User user)
+        {
+            var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
+
+            if (oldUser == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var oldAccount = await _context.UserAccounts.FirstOrDefaultAsync(ua => ua.UserAccountId == user.UserAccountId);
+
+            if (oldAccount == null)
+            {
+                return NotFound("Account not found");
+            }
+
+            oldUser = user;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
