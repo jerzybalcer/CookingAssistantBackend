@@ -23,20 +23,33 @@ namespace CookingAssistantBackend.Utilis
             public string GenerateToken(UserAccount userAccount)
             {
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
 
-                var claims = new[] {
-                    new Claim(ClaimTypes.Email, userAccount.Email)
+                var claims = new List<Claim> 
+                {
+                    new Claim("test", userAccount.Email),
+                    new Claim("test2", userAccount.UserAccountId.ToString())
                 };
 
-                var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.Now.AddMinutes(15),
-                    signingCredentials: credentials);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddMinutes(15),
+                    SigningCredentials = credentials
+                };
 
-                return new JwtSecurityTokenHandler().WriteToken(token);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+                //var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                //    _configuration["Jwt:Audience"],
+                //    claims,
+                //    expires: DateTime.Now.AddMinutes(15),
+                //    signingCredentials: credentials);
+
+
+                //return new JwtSecurityTokenHandler().WriteToken(token);
             }
 
             public string GenerateRefreshToken()
