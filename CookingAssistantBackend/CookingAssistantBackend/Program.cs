@@ -48,7 +48,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("https://rookiedoo.herokuapp.com")
+            builder.WithOrigins("http://rookiedoo.herokuapp.com")
             .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
