@@ -66,21 +66,21 @@ namespace CookingAssistantBackend.Controllers
         }
 
         [HttpPost("AddToStep")]
-        public async Task<IActionResult> PostComment(int stepId, int userId, string commentText)
+        public async Task<IActionResult> PostComment(NewCommentDto newComment)
         {
             var recipeStep = await _context.RecipeSteps
                 .Include(rs => rs.Comments)
-                .Where(r => r.RecipeStepId == stepId)
+                .Where(r => r.RecipeStepId == newComment.StepId)
                 .FirstOrDefaultAsync();
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == newComment.WrittenById);
 
             if(user == null)
             {
                 return NotFound("Could find the author of the comment");
             }
 
-            var fullComment = new Comment(commentText, user);
+            var fullComment = new Comment(newComment.CommentText, user);
 
             recipeStep.Comments.Add(fullComment);
 
